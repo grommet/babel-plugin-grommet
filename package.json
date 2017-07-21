@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "name": "babel-plugin-grommet",
+  "description": "Babel plugin to transform member style imports into default imports",
+  "repository": "grommet/babel-plugin-grommet",
+  "contributors": [
+    "Alan Souza <alansouzati@gmail.com>"
+  ],
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "grommet",
+    "babel-plugin"
+  ]
+}

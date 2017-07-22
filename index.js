@@ -13,7 +13,7 @@ module.exports = () => (
             /\.js$/, `./node_modules/${context}`
           ).map(
             file => file.replace(/node_modules\/|\.js/g, '')
-          );
+          ).reverse(); // reverse so es6 modules have higher priority
           const memberImports = path.node.specifiers.filter(
             specifier => specifier.type === 'ImportSpecifier'
           );

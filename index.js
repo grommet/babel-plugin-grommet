@@ -23,8 +23,16 @@ module.exports = () => (
             const componentName = memberImport.imported.name;
             let newPath;
             modulesInContext.some((module) => {
+              // if webpack alias is enabled the es6 path does not exist.
               if (module.endsWith(`/${componentName}`)) {
-                newPath = module;
+                if (process.env.NODE_ENV === 'development') {
+                  // in development webpack alias may be enabled
+                  // es6 modules are not available in the source code
+                  // we need to remove it and use commonjs structure.
+                  newPath = module.replace('es6/', '');
+                } else {
+                  newPath = module;
+                }
                 return true;
               }
               return false;

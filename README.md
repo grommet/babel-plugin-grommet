@@ -14,8 +14,8 @@ Transforms this:
 into this:
 
 ```javascript
-  import Grommet from 'grommet/components/Grommet';
-  import Button from 'grommet/components/Button';
+  import Grommet from 'grommet/components/grommet';
+  import Button from 'grommet/components/button';
 ```
 
 ## Install

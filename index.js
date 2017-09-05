@@ -8,7 +8,7 @@ module.exports = () => (
         const source = path.node.source.value;
 
         if (source.startsWith('grommet')) {
-          const context = /grommet(\/(components|themes|utils))?/.exec(source)[0];
+          const context = /(grommet-icons|grommet)(\/(components|themes|utils))?/.exec(source)[0];
           const modulesInContext = find.fileSync(
             /\.js$/, `./node_modules/${context}`
           ).map(

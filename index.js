@@ -13,6 +13,9 @@ module.exports = () => (
             /\.js$/, `./node_modules/${context}`
           ).map(
             file => file.replace(/node_modules\/|\.js/g, '')
+          ).filter(
+            // remove grommet-icons inside grommet node_modules
+            file => file.indexOf('grommet/grommet-icons') === -1
           ).reverse(); // reverse so es6 modules have higher priority
           const memberImports = path.node.specifiers.filter(
             specifier => specifier.type === 'ImportSpecifier'

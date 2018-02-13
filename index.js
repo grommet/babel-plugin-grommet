@@ -16,7 +16,7 @@ module.exports = () => (
         if (matches) {
           const context = matches[0];
           const modulesInContext = find.fileSync(
-            /\.js$/, pathUtils.join('.', 'node_modules', context);
+            /\.js$/, pathUtils.join('.', 'node_modules', context)
           ).map(
             file => file.replace(new RegExp(`node_modules\\${pathUtils.sep}|\.js`, 'g'), '')
           ).filter(

@@ -1,5 +1,5 @@
 {
-  "version": "0.5.1",
+  "version": "0.5.2",
   "name": "babel-plugin-grommet",
   "description": "Babel plugin to transform member style imports into default imports",
   "repository": "grommet/babel-plugin-grommet",

@@ -49,10 +49,12 @@ module.exports = () => (
             const newImportSpecifier = (
               types.importDefaultSpecifier(types.identifier(memberImport.local.name))
             );
-            transforms.push(types.importDeclaration(
-              [newImportSpecifier],
-              types.stringLiteral(newPath)
-            ));
+            if (newPath) {
+              transforms.push(types.importDeclaration(
+                [newImportSpecifier],
+                types.stringLiteral(newPath)
+              ));
+            }
           });
 
           if (transforms.length > 0) {

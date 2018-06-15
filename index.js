@@ -10,7 +10,7 @@ module.exports = () => (
         const dependency = source.split('/')[0];
 
         const dependencyPathRegexp = new RegExp(
-          `(${dependencies.join('|')})(\\${pathUtils.sep}(components|themes|utils))?$`
+          `(${dependencies.join('|')})(\\${pathUtils.sep}(components|contexts|themes|utils))?$`
         );
         const matches = dependencyPathRegexp.exec(source);
         if (matches) {

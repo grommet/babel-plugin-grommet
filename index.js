@@ -10,49 +10,44 @@ module.exports = () => (
         const dependency = source.split('/')[0];
 
         const dependencyPathRegexp = new RegExp(
-          `(${dependencies.join('|')})(\\${pathUtils.sep}(components|themes|utils))?$`
+          `(${dependencies.join('|')})(\\${pathUtils.sep}(components|contexts|themes|utils))?$`
         );
         const matches = dependencyPathRegexp.exec(source);
         if (matches) {
           const context = matches[0];
+          const stripRegExp = new RegExp(`node_modules\\${pathUtils.sep}|\.js`, 'g');
           const modulesInContext = find.fileSync(
             /\.js$/, pathUtils.join('.', 'node_modules', context)
           ).map(
-            file => file.replace(new RegExp(`node_modules\\${pathUtils.sep}|\.js`, 'g'), '')
+            file => file.replace(stripRegExp, '')
           ).filter(
             // remove grommet-icons inside grommet node_modules
             file => file.indexOf(pathUtils.join(dependency, 'grommet-icons')) === -1
-          ).reverse(); // reverse so es6 modules have higher priority
+          );
           const memberImports = path.node.specifiers.filter(
             specifier => specifier.type === 'ImportSpecifier'
           );
 
           const transforms = [];
+          const development = process.env.NODE_ENV === 'development';
+          const es6 = `${pathUtils.sep}es6${pathUtils.sep}`;
           memberImports.forEach((memberImport) => {
             const componentName = memberImport.imported.name;
-            let newPath;
-            modulesInContext.some((module) => {
-              // if webpack alias is enabled the es6 path does not exist.
-              if (module.endsWith(`${pathUtils.sep}${componentName}`)) {
-                if (process.env.NODE_ENV === 'development') {
-                  // in development webpack alias may be enabled
-                  // es6 modules are not available in the source code
-                  // we need to remove it and use commonjs structure.
-                  newPath = module.replace(`es6${pathUtils.sep}`, '');
-                } else {
-                  newPath = module;
-                }
-                return true;
-              }
-              return false;
-            });
-            const newImportSpecifier = (
-              types.importDefaultSpecifier(types.identifier(memberImport.local.name))
-            );
-            if (newPath) {
+            // filter down to modules that match this componentName
+            const matchingModules = modulesInContext.filter(module =>
+              module.endsWith(`${pathUtils.sep}${componentName}`))
+            // sort production to have es6 first and development to have es5
+            // this is because webpack hot reloading doesn't have the es6 stuff
+            .sort((m1, m2) =>
+              ((development && m1.includes(es6)) ||
+              (!development && m2.includes(es6))) ? 1 : -1);
+            if (matchingModules.length > 0) {
+              const newImportSpecifier = (
+                types.importDefaultSpecifier(types.identifier(memberImport.local.name))
+              );
               transforms.push(types.importDeclaration(
                 [newImportSpecifier],
-                types.stringLiteral(newPath)
+                types.stringLiteral(matchingModules[0])
               ));
             }
           });
